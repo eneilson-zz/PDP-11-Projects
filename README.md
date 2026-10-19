@@ -20,3 +20,13 @@ A fixed build of FOCAL-11, the native RSX-11M / RSX-11M-PLUS port of DEC's inter
 - **`FEXP(0.0)` recursed forever.** `XFEXP` computes e^x by recursively halving x and squaring on the way back, stopping when the exponent falls below -8. Zero has exponent 0, so it never stops, and the recursion runs the stack off the bottom of memory. All of the other respective functions have a recursion-depth guard; `XFEXP` was the only one without it. A small patch to `FCLMAI.MAC` adds the same guard, falling through to the direct series (which gives 1.0 at x=0).
 
 I bumped the version from `V11-01B` to `V11-01C`. Includes the full patched source, the task-builder file, build and install steps, and a damped sine wave program to confirm the fix.
+
+#### [ALGOL-60 (DECUS 11-231)](algol-60/)
+
+A ready-to-install build of Gregory Hosler's DECUS ALGOL-60 compiler and interpreter for RSX-11M / RSX-11M-PLUS. ALGOL-60 was the standard language of published algorithms in the 1960s and the ancestor of Pascal and most block-structured languages. This one compiles to P-code run by a small interpreter task, with 16-bit integers and booleans (no floating point). Getting it running on RSX-11M-PLUS V4.6 took two fixes:
+
+- **Path patch.** The interpreter and compiler look for their default files with a hard-coded `[001,002]` and no device, which fails to parse on RSX-11M-PLUS (`PARSE ERROR, FCS -26`). Replacing it with the same-length `DU0:[1,2]` in the task image and the compiler file fixes it.
+- **Object files.** The interpreter ships as RT-11-format `.OBJ` files that `TKB` rejects after an FTP transfer; they have to be converted with `FLX` from an RT-11 volume. The prebuilt, patched task image skips that step.
+
+Includes the patched binaries, the original unmodified kit, a patch script, a demo program, and numbered install, usage and rebuild steps.
+

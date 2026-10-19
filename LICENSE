@@ -1,13 +1,22 @@
 MIT License
 
-This repository contains the PiDP-11 emulator/front-panel source
-(directory `pidp/`), originally authored by Oscar Vermeulen and Joerg Hoppe,
-along with modifications made in this repository.
+This repository contains fixes and enhancements to existing PDP-11 software,
+along with the original works they are based on:
 
-Original PiDP-11 source:
-Copyright (c) 2012-2019 Oscar Vermeulen & Joerg Hoppe (www.retrocmp.com)
+  - fig-forth/: PDP-11 FIG-FORTH by John S. James and the Forth Interest
+    Group (1979). The original user's guide states that the manual and system
+    are public domain.
+  - focal-11/: FOCAL-11 for RSX, by Glenn Everhart, distributed through DECUS
+    (RSX87A collection, directory 312315). FOCAL is by Digital Equipment
+    Corporation.
+  - algol-60/: ALGOL-60 for the PDP-11, DECUS program 11-231, by Gregory D.
+    Hosler of Digital Equipment Corporation. The original kit is included
+    unmodified in algol-60/kit/.
 
-Modifications and additions in this repository:
+The original works remain the property of their respective authors. The MIT
+License below applies only to the modifications and additions made in this
+repository:
+
 Copyright (c) 2026 eneilson-zz
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
