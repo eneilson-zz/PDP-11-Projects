@@ -6,10 +6,11 @@ The compiler turns ALGOL source into interpreted P-code. A small interpreter tas
 
 ## What's different from the DECUS kit
 
-The kit (included unmodified in `kit/`) is documented for RSX-11M and RT-11 but needs two fixes to work on RSX-11M-PLUS V4.6+:
+The kit (included unmodified in `kit/`) is documented for RSX-11M and RT-11 but needs three fixes to work well on RSX-11M-PLUS V4.6:
 
-1. **Path patch.** The interpreter and the compiler look up their default compiler and error-message files with the hard-coded 9-character string `[001,002]` and no device. On RSX-11M-PLUS that spec fails with `PARSE ERROR, FCS ERROR = -26`, even though `DU0:[1,2]ALGOL` typed by hand works. The fix is to replace the string with the same-length `DU0:[1,2]` (2 places in the task image, 1 in `ALGOL.ALG`). `build/patch_paths.py` does it.
+1. **Path patch.** The interpreter and the compiler look up their default compiler and error-message files with the hard-coded 9-character string `[001,002]` and no device. On RSX-11M-PLUS that spec fails with `PARSE ERROR, FCS ERROR = -26`, even though `DU0:[1,2]ALGOL` typed by hand works. The fix is to replace the string with the same-length `DU0:[1,2]` (2 places in the task image, 1 in `ALGOL.ALG`). `build/patch_algol.py` does it.
 2. **Object file conversion.** The interpreter is distributed as RT-11-format `.OBJ` files. `TKB` rejects them if you just FTP them ("illegal format", in both fixed and variable record modes), so they have to be converted with `FLX` from an RT-11 volume. The prebuilt, patched `bin/ALGOL.TSK` here saves you that step.
+3. **Prompt artifact.** The compiler prints its banner and `#` prompt as a 10-word record (`WRITE(TTY[0],10,CSI)`). The text is 19 bytes, so the source pads the last word with `3"200"`, a byte with only bit 7 set (0x80). On a 7-bit terminal of the day bit 7 was dropped and the pad was invisible; over an 8-bit telnet connection it arrives as a real 0x80 byte, which a modern terminal draws as a garbage character after every `#`. It is harmless but ugly. The pad byte is now a space, so the prompt reads `# `. Integer literals are stored in the compiled code as the value shifted left two bits, so the fix changes the operand word `00 02` (128) to `80 00` (32). `build/patch_algol.py` finds it by its neighbouring operands and does it.
 
 ## Files
 
@@ -22,7 +23,7 @@ The kit (included unmodified in `kit/`) is documented for RSX-11M and RT-11 but 
 | `bin/SWAP.ALG` | 64-block swap file for the interpreter's software virtual memory |
 | `src/DEMO.SRC` | Base-conversion demo program from the kit |
 | `build/ALGBLD.TKB` | Task-builder file for rebuilding the interpreter |
-| `build/patch_paths.py` | Applies the path patch to a task image or `ALGOL.ALG` |
+| `build/patch_algol.py` | Applies the path patch to a task image or `ALGOL.ALG`, and the prompt patch to `ALGOL.ALG` |
 | `docs/` | The kit's documentation as plain text (`rsx.doc`, `rt.doc`, `complr.doc`, `binder.doc`, `listng.doc`, `patch.doc`) |
 | `kit/` | The original DECUS 11-231 files, unmodified (three floppies: `110231a1`, `a2`, `a3`) |
 
@@ -103,4 +104,4 @@ Notes:
 
 ## Credits and licence
 
-ALGOL-60 for the PDP-11 was written by Gregory D. Hosler of Digital Equipment Corporation and distributed through DECUS as program 11-231. The kit files in `kit/` come from the PDP-11 DECUS archive on ibiblio and were put on floppy by Eric Morton of Prelco Corp. They are included unmodified in `kit/`; the copies in `bin/` differ from them only by the three path edits described above. Sources for the interpreter were never released. The DECUS catalogue describes the program as a user-contributed program with no warranty. The RSX-11M-PLUS port, the patch, and the build and install instructions are by Eric C. Neilson, October 2026.
+ALGOL-60 for the PDP-11 was written by Gregory D. Hosler of Digital Equipment Corporation and distributed through DECUS as program 11-231. The kit files in `kit/` come from the PDP-11 DECUS archive on ibiblio and were put on floppy by Eric Morton of Prelco Corp. They are included unmodified in `kit/`; the copies in `bin/` differ from them only by the patches described above (the path string in three places and one prompt byte). Sources for the interpreter were never released. The DECUS catalogue describes the program as a user-contributed program with no warranty. The RSX-11M-PLUS port, the patch, and the build and install instructions are by Eric C. Neilson, October 2026.

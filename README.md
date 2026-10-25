@@ -23,10 +23,11 @@ I bumped the version from `V11-01B` to `V11-01C`. Includes the full patched sour
 
 #### [ALGOL-60 (DECUS 11-231)](algol-60/)
 
-A ready-to-install build of Gregory Hosler's DECUS ALGOL-60 compiler and interpreter for RSX-11M / RSX-11M-PLUS. ALGOL-60 was the standard language of published algorithms in the 1960s and the ancestor of Pascal and most block-structured languages. This one compiles to P-code run by a small interpreter task, with 16-bit integers and booleans (no floating point). Getting it running on RSX-11M-PLUS V4.6 took two fixes:
+A ready-to-install build of Gregory Hosler's DECUS ALGOL-60 compiler and interpreter for RSX-11M / RSX-11M-PLUS. ALGOL-60 was the standard language of published algorithms in the 1960s and the ancestor of Pascal and most block-structured languages. This one compiles to P-code run by a small interpreter task, with 16-bit integers and booleans (no floating point). Getting it running on RSX-11M-PLUS V4.6 took three fixes:
 
 - **Path patch.** The interpreter and compiler look for their default files with a hard-coded `[001,002]` and no device, which fails to parse on RSX-11M-PLUS (`PARSE ERROR, FCS -26`). Replacing it with the same-length `DU0:[1,2]` in the task image and the compiler file fixes it.
 - **Object files.** The interpreter ships as RT-11-format `.OBJ` files that `TKB` rejects after an FTP transfer; they have to be converted with `FLX` from an RT-11 volume. The prebuilt, patched task image skips that step.
+- **Prompt artifact.** The compiler pads its `#` prompt with a byte of 0x80, which was invisible on 7-bit terminals but prints as a garbage character over an 8-bit telnet connection. It is now a space.
 
 Includes the patched binaries, the original unmodified kit, a patch script, a demo program, and numbered install, usage and rebuild steps.
 
