@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Patch DECUS 11-231 ALGOL for RSX-11M-PLUS.
 
-Two in-place, same-length binary patches:
+Three in-place, same-length binary patches:
 
 1. Default file paths (task image AND compiler file).
    The interpreter and the compiler look up their default compiler and
@@ -11,7 +11,15 @@ Two in-place, same-length binary patches:
    Change DEVICE below if LB: is not DU0: on your system (keep the string
    exactly 9 characters).
 
-2. Stray 0x80 after the compiler's "#" prompt (compiler file only).
+2. Compiler error-message file spec (compiler file only).
+   The compiler opens its error messages with the single 18-character
+   literal TITLE="ALGOL.ERR[001,002]" (name first, UIC after), which FCS
+   on RSX-11M-PLUS cannot parse, so compile errors showed only the line and
+   a bare marker. The literal is rewritten as "DU0:[1,2]ALGOL.ERR" (also 18
+   characters). A compiler patched by an earlier version of this script
+   ("ALGOL.ERRDU0:[1,2]") is repaired too.
+
+3. Stray 0x80 after the compiler's "#" prompt (compiler file only).
    The compiler prints its banner and prompt with WRITE(TTY[0],10,CSI),
    a 10-word record. "ALGOL  V06.6.019", LF, CR, "#" is 19 bytes, so the
    source pads the last word with 3"200" (octal 200 = 0x80). A 7-bit
@@ -54,10 +62,17 @@ def patch_prompt(data):
     return 1
 
 
+ERR_OLD = b"ALGOL.ERR[001,002]"
+ERR_MID = b"ALGOL.ERRDU0:[1,2]"      # left by the first release of this script
+ERR_NEW = b"DU0:[1,2]ALGOL.ERR"
+assert len(ERR_OLD) == len(ERR_MID) == len(ERR_NEW) == 18
+
 for path in sys.argv[1:]:
-    data = bytearray(open(path, "rb").read())
+    data = bytes(open(path, "rb").read())
+    e = data.count(ERR_OLD) + data.count(ERR_MID)
+    data = data.replace(ERR_OLD, ERR_NEW).replace(ERR_MID, ERR_NEW)
     n = data.count(OLD)
-    data = bytearray(bytes(data).replace(OLD, NEW))
+    data = bytearray(data.replace(OLD, NEW))
     p = patch_prompt(data)
     open(path, "wb").write(data)
-    print(f"{path}: {n} path string(s), {p} prompt pad byte(s) patched")
+    print(f"{path}: {e} error-file spec(s), {n} path string(s), {p} prompt pad byte(s) patched")
