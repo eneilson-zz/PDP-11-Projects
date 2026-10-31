@@ -31,3 +31,7 @@ A ready-to-install build of Gregory Hosler's DECUS ALGOL-60 compiler and interpr
 
 Includes the patched binaries, the original unmodified kit, a patch script, a demo program, and numbered install, usage and rebuild steps.
 
+#### [ALGOL-60 6.7 (Koning's RSTS/E version)](algol-67/)
+
+Paul Koning's [RSTS/E port of PDP-11 ALGOL](https://github.com/pkoning2/algol) (compiler V6.7.003, 1980, with a new listing format and several language revisions) running on RSX-11M-PLUS, on top of the DECUS interpreter from [`algol-60`](algol-60/). His repository has the compiler as ALGOL source and the RSTS/E runtime as MACRO-11 source that can't be reassembled without two RSTS kit files, so instead of porting the runtime, a script converts the compiler source (his 6.7 counts I/O in bytes, the RSX interpreter in words, among other differences) and the DECUS 6.6 compiler builds it. The result is **self-hosting**: the 6.7 compiler compiles its own source into a compiler identical to itself apart from the embedded timestamp. You build the compiler yourself on RSX from the converted source in the project, with nothing but FTP, once [`algol-60`](algol-60/) is installed and working. Includes the converted source, the conversion script, a reference build, tested examples, and step-by-step install and usage instructions. His repository is copied unmodified into [`algol-rsts/`](algol-rsts/).
+

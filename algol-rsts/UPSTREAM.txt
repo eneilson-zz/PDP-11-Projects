@@ -1,0 +1,6 @@
+Imported unmodified from https://github.com/pkoning2/algol
+Upstream commit: 0e7d019f1d8246a5fa2149469da18edb2b5a9deb (Paul Koning, MIT licence, see LICENSE)
+Copied on 2026-10-30. Original files are untouched; this note is the only addition.
+The RSTS/E port of PDP-11 ALGOL: compiler source (algol.alg), compiled compiler
+(algol.alc), MACRO-11 runtime system sources, and the RSTS build script.
+common.mac and err.stb (RSTS kit files, needed to reassemble the runtime) are not included.

@@ -12,6 +12,12 @@ along with the original works they are based on:
   - algol-60/: ALGOL-60 for the PDP-11, DECUS program 11-231, by Gregory D.
     Hosler of Digital Equipment Corporation. The original kit is included
     unmodified in algol-60/kit/.
+  - algol-rsts/: PDP-11 ALGOL for RSTS/E (compiler 6.7), by Barry James Folsom,
+    Gregory D. Hosler, Terry Grieb and Paul Koning. An unmodified copy of
+    github.com/pkoning2/algol, which is under the MIT License (Copyright (c)
+    2022 Paul Koning); see algol-rsts/LICENSE.
+  - algol-67/: an adaptation of that compiler for RSX-11 and the compiler built
+    from it.
 
 The original works remain the property of their respective authors. The MIT
 License below applies only to the modifications and additions made in this

@@ -1,0 +1,5 @@
+*.obj
+*.lst
+*.map
+common.mac
+err.stb

@@ -1,0 +1,5 @@
+BEGIN
+  INTEGER I;
+  I:=1
+  I:=2;
+END.
