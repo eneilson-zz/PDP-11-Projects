@@ -54,7 +54,7 @@ In a privileged session (change the owner UIC to the account that you FTP in wit
 
 **Use a new FTP session for this.** `BLOCK` mode stays switched on for the rest of a connection, so text sent in the same session as step 2 is stored as raw blocks and reads back as garbage.
 
-    ftp frodo
+    ftp <your RSX-11 system>
     (log in)
     ascii
     cd DU1:[ALGOL67]
